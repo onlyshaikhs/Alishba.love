@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>For Alishba 💕</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ffd6e8, #ffeef6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .card {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    text-align: center;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+    max-width: 380px;
+    width: 90%;
+    animation: pop 0.8s ease;
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes pop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  h1 { color: #ff4f8b; margin-bottom: 10px; }
+  p { color: #555; margin-bottom: 30px; }
+
+  .buttons { position: relative; height: 120px; }
+
+  button {
+    padding: 14px 28px;
+    border-radius: 30px;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    position: absolute;
+    transition: transform 0.1s ease;
+  }
+
+  #yesBtn {
+    background: #ff4f8b;
+    color: white;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  #noBtn {
+    background: #f1f1f1;
+    color: #333;
+    left: 50%;
+    top: 60px;
+    transform: translateX(-50%);
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1>Do you love me, Alishba?</h1>
+  <p>I have a feeling I already know the answer…</p>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
+  </div>
+</div>
+
+<script>
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const card = document.getElementById("card");
+
+  // Smooth No button that stays in screen
+  const safeDistance = 120;
+  let mouseX = 0, mouseY = 0;
+  let btnX = noBtn.offsetLeft;
+  let btnY = noBtn.offsetTop;
+  let wiggleAngle = 0;
+
+  document.addEventListener("mousemove", (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function updateNoBtn() {
+    const rect = noBtn.getBoundingClientRect();
+    const dx = mouseX - (rect.left + rect.width/2);
+    const dy = mouseY - (rect.top + rect.height/2);
+    const distance = Math.hypot(dx, dy);
+
+    if(distance < safeDistance) {
+      const angle = Math.atan2(dy, dx);
+      const moveX = -Math.cos(angle) * (safeDistance - distance);
+      const moveY = -Math.sin(angle) * (safeDistance - distance);
+
+      btnX += moveX;
+      btnY += moveY;
+
+      // Keep inside screen
+      btnX = Math.max(0, Math.min(window.innerWidth - rect.width, btnX));
+      btnY = Math.max(0, Math.min(window.innerHeight - rect.height, btnY));
+
+      wiggleAngle = Math.sin(Date.now() / 100) * 10;
+      noBtn.style.transform = `translate(${btnX}px, ${btnY}px) rotate(${wiggleAngle}deg)`;
+    }
+
+    requestAnimationFrame(updateNoBtn);
+  }
+  updateNoBtn();
+
+  // Backup protection
+  noBtn.addEventListener("click", () => {
+    card.innerHTML = `
+      <h1>Nice try 😏</h1>
+      <p>You really thought “No” was an option?</p>
+      <p><strong>Mubashir still loves you ❤️</strong></p>
+    `;
+  });
+
+  yesBtn.addEventListener("click", () => {
+    card.innerHTML = `
+      <h1>I knew it 😌💖</h1>
+      <p>Mubashir loves you even more, Alishba 💕</p>
+    `;
+  });
+</script>
+
+</body>
+</html>
